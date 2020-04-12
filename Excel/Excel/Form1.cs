@@ -34,80 +34,41 @@ namespace ExcelTest
       Excel.Worksheet sheet = (Excel.Worksheet)ex.Worksheets.get_Item(1);
       //Название листа (вкладки снизу)
       sheet.Name = "Отчет за 13.12.2017";
-      //Принтер
-      ex.ActivePrinter = "Adobe PDF (Ne06:)";
-      //Поля
-      sheet.PageSetup.LeftMargin = ex.InchesToPoints(0);
-      sheet.PageSetup.RightMargin = ex.InchesToPoints(0);
-      sheet.PageSetup.TopMargin = ex.InchesToPoints(0);
-      sheet.PageSetup.BottomMargin = ex.InchesToPoints(0);
-      sheet.PageSetup.HeaderMargin = ex.InchesToPoints(0);
-      sheet.PageSetup.FooterMargin = ex.InchesToPoints(0);
 
-      //Пример заполнения ячеек
-      //for (int i = 2; i <= 59; i++)
-      //{
-      //  //sheet.Cells[i, j].RowHeight = 15;
-      //  for (int j = 2; j <= 41; j++)
-      //  {
-      //    sheet.Cells[i, j] = String.Format("{0}:{1}", i, j);
-
-      //  }
-      //}
-      //Последняя заполненная ячейка
-      //Excel.Range last = sheet.Cells.SpecialCells(Excel.XlCellType.xlCellTypeLastCell, Type.Missing);
-      Excel.Range last = sheet.Cells[58,40];
-      //Захватываем диапазон ячеек
-      Excel.Range r = sheet.Cells[2, 2];
-      Excel.Range c = sheet.Cells[last.Row, last.Column];
-      Excel.Range range1 = sheet.get_Range(r, c); //("A1","H9");//
-      //Ширина/высота ячеек
-      range1.ColumnWidth = 1.85; range1.RowHeight = 14.8;
-      sheet.Cells[1, 1].RowHeight = 18;
-      sheet.Cells[1, 1].ColumnWidth = 2.5;
-
-      //Шрифт для диапазона
-      range1.Cells.Font.Name = "Tahoma";
-      //Размер шрифта для диапазона
-      range1.Cells.Font.Size = 10;
-      //Захватываем другой диапазон ячеек
-      //r = sheet.Cells[2, 4];
-      //c = sheet.Cells[last.Row, last.Column];
-      Excel.Range range2 = SetRange(sheet,2, 4, last.Row, last.Column);
-      //Excel.Range range2 = sheet.get_Range(r, c);
-      range2.Cells.Font.Name = "Times New Roman";
-      //Задаем цвет этого диапазона. Необходимо подключить System.Drawing
-      range2.Cells.Font.Color = ColorTranslator.ToOle(Color.Green);
-      //Фоновый цвет
-      //range2.Interior.Color = ColorTranslator.ToOle(Color.FromArgb(0xFF, 0xFF, 0xFF));
-      //Периметр диапазона
-      FormatRange(range2);
-      //Нижний штамп
-      range2 = SetRange(sheet, 2, 4, last.Row, last.Column);
-
-      ////Цвет рамки
-      //range2.Borders.Color = ColorTranslator.ToOle(Color.Red);
+      FormatSheet(sheet, ex);
+      
       //Включаем отображение окон с сообщениями
       ex.DisplayAlerts = true;
+
     }
     /// <summary>
     /// Форматирует границы диапазона
     /// </summary>
     /// <param name="rang">Рабочий диапазон</param>
-    private void FormatRange(Excel.Range rang )
+    private void FormatRangeLineBorder(Excel.Range rang, Excel.XlLineStyle style, Excel.XlBorderWeight weight )
     {
       //Слево
-      rang.Borders.get_Item(Excel.XlBordersIndex.xlEdgeLeft).LineStyle = Excel.XlLineStyle.xlContinuous;
-      rang.Borders.get_Item(Excel.XlBordersIndex.xlEdgeLeft).Weight = Excel.XlBorderWeight.xlMedium;
+      rang.Borders.get_Item(Excel.XlBordersIndex.xlEdgeLeft).LineStyle = style;
+      rang.Borders.get_Item(Excel.XlBordersIndex.xlEdgeLeft).Weight = weight;
       //Сверху
-      rang.Borders.get_Item(Excel.XlBordersIndex.xlEdgeTop).LineStyle = Excel.XlLineStyle.xlContinuous;
-      rang.Borders.get_Item(Excel.XlBordersIndex.xlEdgeTop).Weight = Excel.XlBorderWeight.xlMedium;
+      rang.Borders.get_Item(Excel.XlBordersIndex.xlEdgeTop).LineStyle = style;
+      rang.Borders.get_Item(Excel.XlBordersIndex.xlEdgeTop).Weight = weight;
       //Право
-      rang.Borders.get_Item(Excel.XlBordersIndex.xlEdgeRight).LineStyle = Excel.XlLineStyle.xlContinuous;
-      rang.Borders.get_Item(Excel.XlBordersIndex.xlEdgeRight).Weight = Excel.XlBorderWeight.xlMedium;
+      rang.Borders.get_Item(Excel.XlBordersIndex.xlEdgeRight).LineStyle = style;
+      rang.Borders.get_Item(Excel.XlBordersIndex.xlEdgeRight).Weight = weight;
       //Низ
-      rang.Borders.get_Item(Excel.XlBordersIndex.xlEdgeBottom).LineStyle = Excel.XlLineStyle.xlContinuous;
-      rang.Borders.get_Item(Excel.XlBordersIndex.xlEdgeBottom).Weight = Excel.XlBorderWeight.xlMedium;
+      rang.Borders.get_Item(Excel.XlBordersIndex.xlEdgeBottom).LineStyle = style;
+      rang.Borders.get_Item(Excel.XlBordersIndex.xlEdgeBottom).Weight = weight;
+
+    }
+    private void FormatRangeLineInsaide(Excel.Range rang, Excel.XlLineStyle style, Excel.XlBorderWeight weightV, Excel.XlBorderWeight weightH)
+    {
+      //Вертикаль
+      rang.Borders.get_Item(Excel.XlBordersIndex.xlInsideVertical).LineStyle = style;
+      rang.Borders.get_Item(Excel.XlBordersIndex.xlInsideVertical).Weight = weightV;
+      //Горизонталь
+      rang.Borders.get_Item(Excel.XlBordersIndex.xlInsideHorizontal).LineStyle = style;
+      rang.Borders.get_Item(Excel.XlBordersIndex.xlInsideHorizontal).Weight = weightH;
     }
     /// <summary>
     /// Устанавливает кординаты диапазона
@@ -123,6 +84,152 @@ namespace ExcelTest
       Excel.Range r = sheet.Cells[snr, snc];
       Excel.Range c = sheet.Cells[enr, enc];
       return  sheet.get_Range(r, c);
+    }
+
+    private void FormatSheet(Excel.Worksheet sheet, Excel.Application app)
+    {
+      //Принтер
+      app.ActivePrinter = "Adobe PDF (Ne06:)";
+      //Поля
+      sheet.PageSetup.LeftMargin = app.InchesToPoints(0);
+      sheet.PageSetup.RightMargin = app.InchesToPoints(0);
+      sheet.PageSetup.TopMargin = app.InchesToPoints(0);
+      sheet.PageSetup.BottomMargin = app.InchesToPoints(0);
+      sheet.PageSetup.HeaderMargin = app.InchesToPoints(0);
+      sheet.PageSetup.FooterMargin = app.InchesToPoints(0);
+
+      sheet.Cells[1, 1].RowHeight = 18;
+      sheet.Cells[1, 1].ColumnWidth = 0.6;
+      sheet.Cells[1, 2].ColumnWidth = 0.9;
+      sheet.Cells[1, 3].ColumnWidth = 0.6;
+      sheet.Cells[1, 4].ColumnWidth = 0.9;
+      sheet.Cells[1, 5].ColumnWidth = 0.6;
+
+      sheet.Cells[1, 40].ColumnWidth = 0.6;
+      sheet.Cells[1, 41].ColumnWidth = 0.9;
+      sheet.Cells[1, 42].ColumnWidth = 1.85;
+      sheet.Cells[1, 43].ColumnWidth = 1.85;
+      sheet.Cells[1, 44].ColumnWidth = 1.85;
+      sheet.Cells[1, 45].ColumnWidth = 1.85;
+
+      Excel.Range range;
+      range = SetRange(sheet, 2, 6, 58, 39); 
+      range.ColumnWidth = 1.85; range.RowHeight = 14.8;
+
+
+      for (int r = 48; r <= 52; r++)
+      {
+        for (int c = 7; c <= 14; c = c + 2)
+        {
+          range = SetRange(sheet, r, c, r, c + 1);
+          range.Merge();
+        }
+      }
+
+      for (int r = 53; r <= 58; r++)
+      {
+        for (int c = 7; c <= 14; c = c + 4)
+        {
+          range = SetRange(sheet, r, c, r, c + 3);
+          range.Merge();
+        }
+      }
+
+      for (int r = 48; r <= 58; r++)
+      {
+        for (int c = 15; c <= 17; c = c + 3)
+        {
+          range = SetRange(sheet, r, c, r, c + 2);
+          range.Merge();
+        }
+      }
+
+      for (int r = 48; r <= 58; r++)
+      {
+        for (int c = 18; c <= 19; c = c + 2)
+        {
+          range = SetRange(sheet, r, c, r, c + 1);
+          range.Merge();
+        }
+      }
+      range = SetRange(sheet, 48, 20, 49, 44);
+      range.Merge();
+      range = SetRange(sheet, 50, 20, 52, 44);
+      range.Merge();
+      range = SetRange(sheet, 53, 20, 55, 33);
+      range.Merge();
+      range = SetRange(sheet, 56, 20, 58, 33);
+      range.Merge();
+      range = SetRange(sheet, 56, 34, 58, 44);
+      range.Merge();
+      range = SetRange(sheet, 53, 34, 53, 36); //Ситадия
+      range.Merge();
+      range = SetRange(sheet, 53, 37, 53, 40); //Лист
+      range.Merge();
+      range = SetRange(sheet, 53, 41, 53, 44); //Листов
+      range.Merge();
+      range = SetRange(sheet, 54, 34, 55, 36); //Ситадия
+      range.Merge();
+      range = SetRange(sheet, 54, 37, 55, 40); //Лист
+      range.Merge();
+      range = SetRange(sheet, 54, 41, 55, 44); //Листов
+      range.Merge();
+
+      range = SetRange(sheet, 29, 2, 43, 3); //Боковой штамп
+      range.Merge();
+      range.Merge();
+      range = SetRange(sheet, 29, 4, 30, 5); //Боковой штамп
+      range.Merge();
+      range = SetRange(sheet, 31, 4, 33, 5); //Боковой штамп
+      range.Merge();
+      range = SetRange(sheet, 34, 4, 38, 5); //Боковой штамп
+      range.Merge();
+      range = SetRange(sheet, 39, 4, 43, 5); //Боковой штамп
+      range.Merge();
+      range = SetRange(sheet, 39, 4, 43, 5); //Боковой штамп
+      range.Merge();
+      range = SetRange(sheet, 29, 6, 30, 6); //Боковой штамп
+      range.Merge();
+      range = SetRange(sheet, 31, 6, 33, 6); //Боковой штамп
+      range.Merge();
+      range = SetRange(sheet, 34, 6, 38, 6); //Боковой штамп
+      range.Merge();
+      range = SetRange(sheet, 39, 6, 43, 6); //Боковой штамп
+      range.Merge();
+      range = SetRange(sheet, 39, 6, 43, 6); //Боковой штамп
+      range.Merge();
+      range = SetRange(sheet, 29, 2, 43, 6); //Боковой штамп
+      FormatRangeLineBorder(range, Excel.XlLineStyle.xlContinuous, Excel.XlBorderWeight.xlThin);
+      FormatRangeLineInsaide(range, Excel.XlLineStyle.xlContinuous, Excel.XlBorderWeight.xlThin, Excel.XlBorderWeight.xlThin);
+
+      range = SetRange(sheet, 44, 3, 48, 4); //Боковой штамп
+      range.Merge();
+      range = SetRange(sheet, 49, 3, 55, 4); //Боковой штамп
+      range.Merge();
+      range = SetRange(sheet, 56, 3, 58, 4); //Боковой штамп
+      range.Merge();
+      range = SetRange(sheet, 44, 5, 48, 6); //Боковой штамп
+      range.Merge();
+      range = SetRange(sheet, 49, 5, 55, 6); //Боковой штамп
+      range.Merge();
+      range = SetRange(sheet, 56, 5, 58, 6); //Боковой штамп
+      range.Merge();
+      range = SetRange(sheet, 44, 3, 58, 6); //Боковой штамп
+      FormatRangeLineBorder(range, Excel.XlLineStyle.xlContinuous, Excel.XlBorderWeight.xlMedium);
+      FormatRangeLineInsaide(range, Excel.XlLineStyle.xlContinuous, Excel.XlBorderWeight.xlMedium, Excel.XlBorderWeight.xlMedium);
+
+      range = SetRange(sheet, 2, 7, 55, 44);
+      FormatRangeLineBorder(range, Excel.XlLineStyle.xlContinuous, Excel.XlBorderWeight.xlMedium);
+
+      range = SetRange(sheet, 48, 7, 58, 44);
+      FormatRangeLineBorder(range, Excel.XlLineStyle.xlContinuous, Excel.XlBorderWeight.xlMedium);
+      range = SetRange(sheet, 48, 7, 58, 20);
+      FormatRangeLineInsaide(range, Excel.XlLineStyle.xlContinuous, Excel.XlBorderWeight.xlMedium, Excel.XlBorderWeight.xlThin);
+      range = SetRange(sheet, 52, 7, 52, 19);
+      FormatRangeLineBorder(range, Excel.XlLineStyle.xlContinuous, Excel.XlBorderWeight.xlMedium);
+      range = SetRange(sheet, 48, 20, 58, 44);
+      FormatRangeLineInsaide(range, Excel.XlLineStyle.xlContinuous, Excel.XlBorderWeight.xlMedium, Excel.XlBorderWeight.xlMedium);
+
     }
   }
 }
