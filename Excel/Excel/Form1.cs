@@ -34,11 +34,17 @@ namespace ExcelTest
       Excel.Worksheet sheet = (Excel.Worksheet)ex.Worksheets.get_Item(1);
       //Название листа (вкладки снизу)
       sheet.Name = "Штамп А4";
+      //Статус бар
+      ex.StatusBar = "Формируем штамп А4";
 
       FormatSheet(sheet, ex);
-      
+
       //Включаем отображение окон с сообщениями
+      workBook.SaveAs(tb_patch.Text);
+      workBook.Close();
       ex.DisplayAlerts = true;
+      ex.Quit();
+      
 
     }
     /// <summary>
@@ -147,6 +153,17 @@ namespace ExcelTest
             range.Value = str[n]; n++;
             //Шрифт для диапазона
             range.Cells.Font.Name = "Gost type A"; range.Cells.Font.Size = 10;
+            range.ClearComments();
+            //var comment2 = range.Comment;
+            //comment2.AddText("Frist line in comment.").SetBold().SetFontSize(6);
+            //comment2.AddNewLine();
+            //comment2.AddText("Sencond line.").FontName = "Times New Roman";
+            //Object str1 = "";
+            //range.AddComment(str1);
+            //var comment = "Mikhail";  range.AddComment();
+            //range.Comment.Visible = true;
+            //range.Comment.Text(obj);
+            //range.Comment. ="Тестовое примечание";
           }
         }
         //Строка для заполнения
@@ -261,6 +278,26 @@ namespace ExcelTest
         range = SetRange(sheet, offSetR+19, offSetC+18, offSetR+29, offSetC+42);
         FormatRangeLineInsaide(range, Excel.XlLineStyle.xlContinuous, Excel.XlBorderWeight.xlMedium, Excel.XlBorderWeight.xlMedium);
       }
+    }
+
+    private void button2_Click(object sender, EventArgs e)
+    {
+      OpenFileDialog OPF = new OpenFileDialog();
+      OPF.Filter = "Файлы Excel|*.xls;*.xlsm;*.xlsx";
+      if (OPF.ShowDialog() == DialogResult.OK)
+      {
+        tb_patch.Text = OPF.FileName;
+        //MessageBox.Show(OPF.FileName);
+      }
+    }
+
+    private void btn_saveAs_Click(object sender, EventArgs e)
+    {
+      SaveFileDialog SFD = new SaveFileDialog();
+      if (SFD.ShowDialog() == DialogResult.Cancel)
+        return;
+      // получаем выбранный файл
+      tb_patch.Text = SFD.FileName;
     }
   }
 }
