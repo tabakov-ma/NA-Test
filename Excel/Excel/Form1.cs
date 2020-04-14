@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Excel.Properties;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -8,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ExceL = Microsoft.Office.Interop.Excel;
+using System.Data.SqlClient;
 
 namespace ExcelTest
 {
@@ -16,7 +18,12 @@ namespace ExcelTest
     public Form1()
     {
       InitializeComponent();
-      this.tb_patch.Text = ExcelTest.Properties.Settings.Default.Patch;
+      this.tb_patch.Text = Settings.Default.Patch;
+      //Стартовая позиция
+      this.StartPosition = FormStartPosition.Manual;
+      this.Location = new Point(Settings.Default.Left, Settings.Default.Top);
+
+
     }
 
     private void button1_Click(object sender, EventArgs e)
@@ -299,6 +306,74 @@ namespace ExcelTest
         return;
       // получаем выбранный файл
       tb_patch.Text = SFD.FileName;
+    }
+
+    private void tb_patch_TextChanged(object sender, EventArgs e)
+    {
+      Settings.Default.Patch = this.tb_patch.Text;
+      Settings.Default.Save();
+    }
+
+    private void button3_Click(object sender, EventArgs e)
+    {
+      
+    }
+
+    private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+    {
+      Settings.Default.Top = this.Top;
+      Settings.Default.Left = this.Left;
+      Settings.Default.Save();
+    }
+
+    private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+    {
+
+    }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+      // TODO: данная строка кода позволяет загрузить данные в таблицу "database1DataSet4.Table2". При необходимости она может быть перемещена или удалена.
+      this.table2TableAdapter.Fill(this.database1DataSet4.Table2);
+      // TODO: данная строка кода позволяет загрузить данные в таблицу "database1DataSet3.Table". При необходимости она может быть перемещена или удалена.
+      this.tableTableAdapter2.Fill(this.database1DataSet3.Table);
+      // TODO: данная строка кода позволяет загрузить данные в таблицу "database1DataSet2.Table". При необходимости она может быть перемещена или удалена.
+      this.tableTableAdapter1.Fill(this.database1DataSet2.Table);
+      // TODO: данная строка кода позволяет загрузить данные в таблицу "database1DataSet1.Table". При необходимости она может быть перемещена или удалена.
+      this.tableTableAdapter.Fill(this.database1DataSet1.Table);
+
+        }
+
+        private void dataGridView1_CellContentClick_1(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+    private void button3_Click_1(object sender, EventArgs e)
+    {
+      string sqlCon = @"Data Source=(localdb)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|Database1.mdf;Integrated Security=True";
+      SqlConnection Con = new SqlConnection(sqlCon);
+      Con.Open();
+      MessageBox.Show("Connection opened");
+
+
+
+      //string str = System.Environment.MachineName;
+      //SqlConnection sconn = new SqlConnection("Data Source='" + str + "';Initial Catalog=main;Integrated Security=True");
+      //sconn.Open();
+      DataSet ds = new DataSet();
+      for (int i = 0; i < tableDataGridView.Rows.Count; i++)
+      {
+        SqlDataAdapter da = new SqlDataAdapter("Insert Into dbo.Table2 (ID, Name, Familiya) values('" + tableDataGridView.Rows[i].Cells[0].Value + "', '" + 
+                                                                              tableDataGridView.Rows[i].Cells[1].Value + "', '" + 
+                                                                              tableDataGridView.Rows[i].Cells[2].Value + "')", Con);
+        /*da.Fill(ds, "main");*/
+        da.Fill(ds);
+      }
+      
+
+      Con.Close();
+      MessageBox.Show("Connection closed");
     }
   }
 }
