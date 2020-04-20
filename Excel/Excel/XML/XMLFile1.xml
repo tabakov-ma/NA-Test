@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <Employee2 name =" Иван Иванов">
+    <Age>30</Age>
+    <Programmer>true</Programmer>
+  </Employee2>
+  <Employee name =" Олег Петров">
+    <Age>60</Age>
+    <Programmer>true</Programmer>
+  </Employee>
+  <Employee name =" Сергей Иванов">
+    <Age>30</Age>
+    <Programmer>false</Programmer>
+  </Employee>
+  <Employee name =" Константин Воров">
+    <Age>45</Age>
+    <Programmer>false</Programmer>
+  </Employee>
+  <Employee name =" Настя Соколова">
+    <Age>20</Age>
+    <Programmer>true</Programmer>
+  </Employee>
+  <Employee2 name =" Дмитрий Иванов">
+    <Age>18</Age>
+    <Programmer>false</Programmer>
+  </Employee2>
+</root>

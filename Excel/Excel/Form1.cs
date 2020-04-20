@@ -15,13 +15,18 @@ namespace ExcelTest
 {
   public partial class Form1 : Form
   {
+    //private BindingSource bindingSource = null;
+    //private SqlDataAdapter sqlDataAdapter = null;
+    //DataTable dataTable = null;
     public Form1()
     {
       InitializeComponent();
+      //Ранее выбранный путь
       this.tb_patch.Text = Settings.Default.Patch;
       //Стартовая позиция
       this.StartPosition = FormStartPosition.Manual;
       this.Location = new Point(Settings.Default.Left, Settings.Default.Top);
+
 
 
     }
@@ -333,16 +338,19 @@ namespace ExcelTest
 
         private void Form1_Load(object sender, EventArgs e)
         {
+      // TODO: данная строка кода позволяет загрузить данные в таблицу "database1DataSetPol.Человек". При необходимости она может быть перемещена или удалена.
+      //this.человекTableAdapter1.Fill(this.database1DataSetPol.Человек);
+      // TODO: данная строка кода позволяет загрузить данные в таблицу "database1DataSetHuman.Человек". При необходимости она может быть перемещена или удалена.
+      //this.человекTableAdapter.Fill(this.database1DataSetHuman.Человек);
+      // TODO: данная строка кода позволяет загрузить данные в таблицу "database1DataSetPol.Пол". При необходимости она может быть перемещена или удалена.
+      //this.полTableAdapter.Fill(this.database1DataSetPol.Пол);
       // TODO: данная строка кода позволяет загрузить данные в таблицу "database1DataSet4.Table2". При необходимости она может быть перемещена или удалена.
-      this.table2TableAdapter.Fill(this.database1DataSet4.Table2);
-      // TODO: данная строка кода позволяет загрузить данные в таблицу "database1DataSet3.Table". При необходимости она может быть перемещена или удалена.
-      this.tableTableAdapter2.Fill(this.database1DataSet3.Table);
-      // TODO: данная строка кода позволяет загрузить данные в таблицу "database1DataSet2.Table". При необходимости она может быть перемещена или удалена.
-      this.tableTableAdapter1.Fill(this.database1DataSet2.Table);
-      // TODO: данная строка кода позволяет загрузить данные в таблицу "database1DataSet1.Table". При необходимости она может быть перемещена или удалена.
-      this.tableTableAdapter.Fill(this.database1DataSet1.Table);
+      //this.table2TableAdapter.Fill(this.database1DataSet4.Table2);
+      полTableAdapter1.Fill(this.dataSet11.Пол);
+      человекTableAdapter1.Fill(this.dataSet11.Человек);
 
-        }
+
+    }
 
         private void dataGridView1_CellContentClick_1(object sender, DataGridViewCellEventArgs e)
         {
@@ -351,29 +359,107 @@ namespace ExcelTest
 
     private void button3_Click_1(object sender, EventArgs e)
     {
-      string sqlCon = @"Data Source=(localdb)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|Database1.mdf;Integrated Security=True";
-      SqlConnection Con = new SqlConnection(sqlCon);
-      Con.Open();
-      MessageBox.Show("Connection opened");
-
-
-
-      //string str = System.Environment.MachineName;
-      //SqlConnection sconn = new SqlConnection("Data Source='" + str + "';Initial Catalog=main;Integrated Security=True");
-      //sconn.Open();
-      DataSet ds = new DataSet();
-      for (int i = 0; i < tableDataGridView.Rows.Count; i++)
+      try
       {
-        SqlDataAdapter da = new SqlDataAdapter("Insert Into dbo.Table2 (ID, Name, Familiya) values('" + tableDataGridView.Rows[i].Cells[0].Value + "', '" + 
-                                                                              tableDataGridView.Rows[i].Cells[1].Value + "', '" + 
-                                                                              tableDataGridView.Rows[i].Cells[2].Value + "')", Con);
-        /*da.Fill(ds, "main");*/
-        da.Fill(ds);
+        this.полTableAdapter1.Update(this.dataSet11.Пол);
+        this.человекTableAdapter1.Update(this.dataSet11.Человек);
       }
-      
+      catch (Exception exceptionObj)
+      {
+        MessageBox.Show(exceptionObj.Message.ToString());
+      }
+      //string sqlCon = @"Data Source=(localdb)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|Database1.mdf;Integrated Security=True";
+      //SqlConnection Con = new SqlConnection(sqlCon);
+      //Con.Open();
+      //MessageBox.Show("Connection opened");
 
-      Con.Close();
-      MessageBox.Show("Connection closed");
+
+
+      ////string str = System.Environment.MachineName;
+      ////SqlConnection sconn = new SqlConnection("Data Source='" + str + "';Initial Catalog=main;Integrated Security=True");
+      ////sconn.Open();
+      //DataSet ds = new DataSet();
+      //for (int i = 0; i < tableDataGridView.Rows.Count; i++)
+      //{
+      //  SqlDataAdapter da = new SqlDataAdapter("Insert Into dbo.Table2 (ID, Name, Familiya) values('" + tableDataGridView.Rows[i].Cells[0].Value + "', '" + 
+      //                                                                        tableDataGridView.Rows[i].Cells[1].Value + "', '" + 
+      //                                                                        tableDataGridView.Rows[i].Cells[2].Value + "')", Con);
+      //  da.Fill(ds, "dbo.Table2");
+      //  //da.Update(ds);
+      //}
+
+
+      //Con.Close();
+      //MessageBox.Show("Connection closed");
     }
-  }
+
+    private void bindingNavigator1_RefreshItems(object sender, EventArgs e)
+    {
+
+    }
+
+    private void bindingSource1_CurrentChanged(object sender, EventArgs e)
+    {
+
+    }
+
+    private void bindingNavigatorAddNewItem_Click(object sender, EventArgs e)
+    {
+
+    }
+
+    private void bindingNavigatorDeleteItem_Click(object sender, EventArgs e)
+    {
+
+    }
+
+    private void bindingNavigatorMoveNextItem_Click(object sender, EventArgs e)
+    {
+
+    }
+
+    private void button4_Click(object sender, EventArgs e)
+    {
+      //this.table2TableAdapter.Fill(this.database1DataSet4.Table2);
+    }
+
+    private void toolStripButton1_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        //this.table2TableAdapter.Update(this.database1DataSet4.Table2);
+      }
+      catch (Exception exceptionObj)
+      {
+        MessageBox.Show(exceptionObj.Message.ToString());
+      }
+    }
+
+    private void tableDataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
+    {
+
+    }
+
+    private void tableDataGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+    {
+      try
+      {
+       // this.table2TableAdapter.Update(this.database1DataSet4.Table2);
+      }
+      catch (Exception exceptionObj)
+      {
+        MessageBox.Show(exceptionObj.Message.ToString());
+      }
+    }
+
+    private void label1_Click(object sender, EventArgs e)
+    {
+
+    }
+
+        private void dataGridView1_CellContentClick_2(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+    }
 }
